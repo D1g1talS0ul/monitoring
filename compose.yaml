@@ -1,0 +1,41 @@
+name: monitoring
+
+networks:
+  monitoring:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.100.0/24
+include:
+  - ./databases.yaml
+
+services:
+  alloy:
+    image: grafana/alloy:v1.6.1
+    pull_policy: always
+    profiles: ["monitoring"]
+    restart: on-failure
+    volumes:
+      - ./config/alloy:/etc/alloy
+      - /var/log:/etc/alloy/log
+    environment:
+      REMOTE_WRITE_HOST: 192.168.100.11:9009
+      LOKI_HOST: 192.168.100.12:3100
+    depends_on:
+      - mimir
+      - loki
+    command:
+      - run
+      - /etc/alloy/config.alloy
+      - --storage.path=/var/lib/alloy/data
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --stability.level=experimental # Enable all functionality
+    ports:
+      - "12345:12345"
+    networks:
+      monitoring:
+        ipv4_address: 192.168.100.10
+    extra_hosts:
+      - "alloy:192.168.100.10"
+      - "mimir:192.168.100.11"
+      - "loki:192.168.100.12"

@@ -1,0 +1,30 @@
+services:
+  mimir:
+    image: grafana/mimir:2.15.0
+    restart: on-failure
+    command:
+      - -config.file=/etc/mimir-config/mimir.yaml
+    volumes:
+      - ./config/mimir:/etc/mimir-config
+    ports:
+      - "9009:9009"
+    networks:
+      monitoring:
+        ipv4_address: 192.168.100.11
+    extra_hosts:
+      - "alloy:192.168.100.10"
+      - "mimir:192.168.100.11"
+      - "loki:192.168.100.12"
+
+  loki:
+    image: grafana/loki:3.4.2
+    restart: on-failure
+    ports:
+      - "3100:3100"
+    networks:
+      monitoring:
+        ipv4_address: 192.168.100.12
+    extra_hosts:
+      - "alloy:192.168.100.10"
+      - "mimir:192.168.100.11"
+      - "loki:192.168.100.12"
