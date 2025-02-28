@@ -61,3 +61,4 @@ ruler_storage:
 limits:
   ingestion_burst_size: 500000
   ingestion_rate: 250000
+  compactor_blocks_retention_period: 1w
