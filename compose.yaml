@@ -11,6 +11,7 @@ include:
 
 services:
   alloy:
+    hostname: lush
     image: grafana/alloy:v1.6.1
     pull_policy: always
     profiles: ["monitoring"]
@@ -23,8 +24,8 @@ services:
       - /sys:/host/sys:ro
       - /:/rootfs:ro
     environment:
-      REMOTE_WRITE_HOST: 192.168.100.11:9009
-      LOKI_HOST: 192.168.100.12:3100
+      MIMIR_HOST: lush-mimir:9009
+      LOKI_HOST: lush-loki:3100
     depends_on:
       - mimir
       - loki
@@ -40,6 +41,6 @@ services:
       monitoring:
         ipv4_address: 192.168.100.10
     extra_hosts:
-      - "alloy:192.168.100.10"
-      - "mimir:192.168.100.11"
-      - "loki:192.168.100.12"
+      - "lush-alloy:192.168.100.10"
+      - "lush-mimir:192.168.100.11"
+      - "lush-loki:192.168.100.12"

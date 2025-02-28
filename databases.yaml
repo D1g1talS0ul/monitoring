@@ -1,5 +1,6 @@
 services:
   mimir:
+    hostname: lush-mimir
     image: grafana/mimir:2.15.0
     restart: on-failure
     command:
@@ -12,11 +13,12 @@ services:
       monitoring:
         ipv4_address: 192.168.100.11
     extra_hosts:
-      - "alloy:192.168.100.10"
-      - "mimir:192.168.100.11"
-      - "loki:192.168.100.12"
+      - "lush-alloy:192.168.100.10"
+      - "lush-mimir:192.168.100.11"
+      - "lush-loki:192.168.100.12"
 
   loki:
+    hostname: lush-loki
     image: grafana/loki:3.4.2
     restart: on-failure
     ports:
@@ -25,6 +27,6 @@ services:
       monitoring:
         ipv4_address: 192.168.100.12
     extra_hosts:
-      - "alloy:192.168.100.10"
-      - "mimir:192.168.100.11"
-      - "loki:192.168.100.12"
+      - "lush-alloy:192.168.100.10"
+      - "lush-mimir:192.168.100.11"
+      - "lush-loki:192.168.100.12"
